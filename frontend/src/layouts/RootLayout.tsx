@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth-context";
+import Root from "./Root"
 
 function RootLayout() {
 	const { user } = useContext(AuthContext);
@@ -14,9 +15,9 @@ function RootLayout() {
 	}, [user, navigate]); // Add user and navigate as dependencies
 
 	return (
-		<>
+		<Root>
 			<Outlet />
-		</>
+		</Root>
 	);
 }
 

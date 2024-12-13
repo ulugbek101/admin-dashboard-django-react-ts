@@ -36,3 +36,7 @@ export interface AuthContextProviderProps {
 export interface PrivateRouteProps {
 	element: JSX.Element;
 }
+
+export interface RootProps {
+	children: JSX.Element;
+}

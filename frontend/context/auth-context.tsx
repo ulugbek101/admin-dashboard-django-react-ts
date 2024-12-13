@@ -1,8 +1,9 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { baseURL } from "../utils/constants";
 import {
 	AuthContextProps,
@@ -66,9 +67,16 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 			setAuthTokens(decodedResponse);
 			localStorage.setItem("authTokens", JSON.stringify(decodedResponse));
 			navigate("/");
-		} catch (error) {
-			console.log(error);
-			console.log("Authentication error");
+		} catch (error: unknown) {
+			if (isAxiosError(error)) {
+				if (error.response?.status === 401) {
+					toast.error("E-mail yoki Parol xato terilgan");
+					console.log(error);
+				}
+			} else {
+				toast.error("Noma'lum xatolik yuz berdi");
+				console.log(error);
+			}
 		}
 	}
 
@@ -77,7 +85,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 	function logoutUser() {
 		setUser(null);
 		setAuthTokens(null);
-		localStorage.removeItem("authTokens")
+		localStorage.removeItem("authTokens");
 		navigate("/login");
 	}
 
