@@ -166,6 +166,3 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'app_auth.User'
-
-LOGIN_REDIRECT_URL = reverse_lazy("home_page")
-LOGOUT_REDIRECT_URL = reverse_lazy("login")
