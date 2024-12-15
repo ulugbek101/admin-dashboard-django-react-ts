@@ -1,7 +1,7 @@
-import { RootProps } from "../../utils/models";
+import { Props } from "../../utils/models";
 
-function Root({ children }: RootProps) {
-	return <div className="bg-[#f5f5f5]">{children}</div>;
+function Root({ children }: Props) {
+	return <div className="bg-[#ffffff]">{children}</div>;
 }
 
 export default Root;

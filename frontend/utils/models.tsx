@@ -37,6 +37,6 @@ export interface PrivateRouteProps {
 	element: JSX.Element;
 }
 
-export interface RootProps {
+export interface Props {
 	children: JSX.Element;
 }

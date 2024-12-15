@@ -1,13 +1,15 @@
 import { Route, Routes } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
-import HomePage from "./pages/HomePage";
+import RootLayout from "./layouts/RootLayout";
+import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 
 function App() {
 	return (
 		<Routes>
 			{/* Wrapping HomePage with PrivateRoute */}
-			<Route path="/" element={<PrivateRoute element={<HomePage />} />} />
+			<Route element={<RootLayout />}>
+				<Route path="/profile" element={<ProfilePage />} />
+			</Route>
 			<Route path="/login" element={<LoginPage />} />
 		</Routes>
 	);

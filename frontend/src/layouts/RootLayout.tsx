@@ -1,7 +1,8 @@
 import { useContext, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { AuthContext } from "../../context/auth-context";
-import Root from "./Root"
+import Root from "./Root";
 
 function RootLayout() {
 	const { user } = useContext(AuthContext);
@@ -9,10 +10,10 @@ function RootLayout() {
 
 	useEffect(() => {
 		if (!user) {
-			// Navigate to login if user is not authenticated
-			navigate("/login");
+			toast.error("Avval tizimga kirish talab etiladi");
+			navigate("/login", { state: { from: window.location.pathname } }); // Save the original path
 		}
-	}, [user, navigate]); // Add user and navigate as dependencies
+	}, [user, navigate]);
 
 	return (
 		<Root>
