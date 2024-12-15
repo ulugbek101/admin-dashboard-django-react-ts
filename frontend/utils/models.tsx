@@ -1,11 +1,13 @@
 import { ReactNode } from "react";
 
 export interface User {
-	token_type: string; // e.g., "access"
-	exp: number; // Token expiration time (UNIX timestamp)
-	iat: number; // Token issued at (UNIX timestamp)
-	jti: string; // Unique identifier for the token
+	token_type?: string; // e.g., "access"
+	exp?: number; // Token expiration time (UNIX timestamp)
+	iat?: number; // Token issued at (UNIX timestamp)
+	jti?: string; // Unique identifier for the token
 	id: number; // User ID
+	is_superuser: boolean;
+	is_staff: boolean;
 	username: string;
 	first_name: string;
 	last_name: string;
