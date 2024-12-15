@@ -63,9 +63,14 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 				password,
 			});
 			const decodedResponse: AuthTokens = response.data;
-			setUser(jwtDecode<User>(decodedResponse.access));
+			setUser(() => {
+				const newUser = jwtDecode<User>(decodedResponse.access);
+				toast.success(`Assalomu alaykum, ${newUser?.full_name} 👋`);
+				return newUser;
+			});
 			setAuthTokens(decodedResponse);
 			localStorage.setItem("authTokens", JSON.stringify(decodedResponse));
+
 			navigate("/");
 		} catch (error: unknown) {
 			if (isAxiosError(error)) {
