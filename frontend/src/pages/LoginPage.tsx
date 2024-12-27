@@ -24,7 +24,7 @@ function LoginPage() {
 		setFormIsValid(emailIsValid && passwordIsValid);
 
 		if (user) {
-			navigate("/profile");
+			navigate("/");
 		}
 	}, [user, email, password]);
 

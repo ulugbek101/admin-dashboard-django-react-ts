@@ -100,7 +100,7 @@ function Navbar() {
 							<hr className="my-4" />
 							<div className="flex flex-col gap-1">
 								<NavLink
-									to="/profile"
+									to="/"
 									className={({ isActive }) =>
 										`${
 											isActive ? "bg-[#f5f5f5]" : null
