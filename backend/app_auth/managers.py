@@ -55,3 +55,50 @@ class UserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_superuser=True."))
 
         return self.create_user(email, password, **extra_fields)
+
+
+class RoleManager(BaseUserManager):
+    """
+    Base manager for filtering users by role.
+    This can be extended for specific roles like Teacher, Student, etc.
+    """
+
+    def get_queryset(self):
+        # Return all users without filtering by role
+        return super().get_queryset()
+
+
+class TeacherManager(RoleManager):
+    """
+    Manager for filtering users with the role of TEACHER.
+    """
+
+    def get_queryset(self):
+        return super().get_queryset().filter(role="TEACHER")
+
+
+class StudentManager(RoleManager):
+    """
+    Manager for filtering users with the role of STUDENT.
+    """
+
+    def get_queryset(self):
+        return super().get_queryset().filter(role="STUDENT")
+
+
+class ParentManager(RoleManager):
+    """
+    Manager for filtering users with the role of PARENT.
+    """
+
+    def get_queryset(self):
+        return super().get_queryset().filter(role="PARENT")
+
+
+class AdminManager(RoleManager):
+    """
+    Manager for filtering users with the role of ADMIN.
+    """
+
+    def get_queryset(self):
+        return super().get_queryset().filter(role="ADMIN")
