@@ -16,6 +16,13 @@ export interface User {
 	profile_photo: string;
 }
 
+export interface Subject {
+	id: string;
+	name: string;
+	created: string;
+	updated: string;
+}
+
 export interface AuthTokens {
 	access: string;
 	refresh: string;

@@ -1,142 +1,52 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import useAxios from "../../hooks/useAxios";
+import { Subject } from "../../utils/models";
 import Back from "../components/Back";
 import ContainerSmall from "../components/ContainerSmall";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Navbar from "../components/Navbar";
+import NewSubjectModal from "../components/NewSubjectModal";
+import SubjectDetail from "../components/SubjectDetail";
 
 function SubjectsPage() {
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-	const modalRef = useRef<HTMLDivElement | null>(null);
-	const [activeButton, setActiveButton] = useState<HTMLSpanElement | null>(
-		null
-	);
-	const [modalPosition, setModalPosition] = useState<{
-		top: number;
-		left: number;
-	}>({ top: 0, left: 0 });
-	const scrollableDivRef = useRef<HTMLDivElement | null>(null); // Reference to scrollable div
+	const [isSubjectsLoading, setIsSubjectsLoading] = useState<boolean>(false);
+	const [subjects, setSubjects] = useState<Subject[]>([]);
 
-	const subjects: string[] = [
-		"Matematika",
-		"Fizika",
-		"Kimyo",
-		"Ingliz tili",
-		"Tarix",
-		"Biologiya",
-		"Geografiya",
-		"Adabiyot",
-		"Rus tili",
-		"Nemis tili",
-		"Fransuz tili",
-		"Koreys tili",
-		"Informatika",
-		"Chizmachilik",
-		"Iqtisodiyot",
-		"Huquq",
-		"Psixologiya",
-		"Ekologiya",
-		"Astronomiya",
-		"Jismoniy tarbiya",
-		"San'at",
-		"Musiqa",
-		"Texnologiya",
-		"Mexanika",
-		"Arxitektura",
-		"Mikrobiologiya",
-		"Falsafa",
-		"Sotsiologiya",
-		"Politologiya",
-		"Antropologiya",
-		"Lingvistika",
-		"Kriminologiya",
-		"Farmatsevtika",
-		"Kimyo texnologiyasi",
-		"Robototexnika",
-		"Yadro fizika",
-		"Tibbiyot",
-		"Veterinariya",
-		"Menejment",
-		"Marketing",
-		"Tarjimonlik",
-		"Pedagogika",
-		"Anatomiya",
-		"Moliyaviy hisobot",
-		"Statistika",
-		"Matematik tahlil",
-		"Grafika dizayni",
-		"Jurnalistika",
-		"Elektronika",
-		"Fizika laboratoriyasi",
-		"Kimyo laboratoriyasi",
-	];
+	const [isAddSubjectModalOpen, setIsAddSubjectModalOpen] =
+		useState<boolean>(false);
 
-	const toggleModal = (event: MouseEvent<HTMLSpanElement>) => {
-		const button = event.currentTarget;
+	const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+	const axiosInstance = useAxios();
+	const addSubjectModalRef = useRef<HTMLDivElement | null>(null);
 
-		// If clicking the same button, close the modal
-		if (activeButton === button) {
-			setIsModalOpen(false);
-			setActiveButton(null);
-		} else {
-			// Open modal and set position relative to the button
-			const rect = button.getBoundingClientRect();
-			setModalPosition({
-				top: rect.bottom + window.scrollY,
-				left: rect.left + window.scrollX,
-			});
-			setActiveButton(button);
-			setIsModalOpen(true);
+	async function fetchSubjects() {
+		setIsSubjectsLoading(true);
+		try {
+			const response = await axiosInstance.get("/api/v1/subjects/");
+			setSubjects(response.data);
+		} catch (error: unknown) {
+			toast.error("Fanlarni olishda xatolik yuz berdi. " + error);
+			console.log(error);
+		} finally {
+			setIsSubjectsLoading(false);
 		}
-	};
+	}
 
-	// Handle clicking outside the modal to close it
-	const handleClickOutside = (event: MouseEvent<Document>) => {
+	function handleClickOutsideWhileSubjectAdd(
+		event: React.MouseEvent<HTMLDivElement>
+	) {
 		if (
-			modalRef.current &&
-			!modalRef.current.contains(event.target as Node) &&
-			activeButton &&
-			!activeButton.contains(event.target as Node)
+			addSubjectModalRef.current &&
+			addSubjectModalRef.current == event.target
 		) {
-			setIsModalOpen(false);
-			setActiveButton(null);
+			setIsAddSubjectModalOpen(false);
 		}
-	};
-
-	// Handle scroll event to close the modal
-	const handleScroll = () => {
-		if (isModalOpen) {
-			setIsModalOpen(false);
-		}
-	};
+	}
 
 	useEffect(() => {
-		if (isModalOpen) {
-			document.addEventListener(
-				"mousedown",
-				handleClickOutside as unknown as EventListener
-			);
-			const scrollableDiv = scrollableDivRef.current;
-			if (scrollableDiv) {
-				scrollableDiv.addEventListener("scroll", handleScroll);
-			}
-		} else {
-			document.removeEventListener(
-				"mousedown",
-				handleClickOutside as unknown as EventListener
-			);
-			const scrollableDiv = scrollableDivRef.current;
-			if (scrollableDiv) {
-				scrollableDiv.removeEventListener("scroll", handleScroll);
-			}
-		}
-
-		// Cleanup event listeners on component unmount
-		return () => {
-			const scrollableDiv = scrollableDivRef.current;
-			if (scrollableDiv) {
-				scrollableDiv.removeEventListener("scroll", handleScroll);
-			}
-		};
-	}, [isModalOpen]);
+		fetchSubjects();
+	}, []);
 
 	return (
 		<ContainerSmall>
@@ -144,7 +54,10 @@ function SubjectsPage() {
 				<Navbar />
 				<div className="flex items-center justify-between">
 					<Back />
-					<button className="active:scale-95 transition rounded-xl py-[0.5rem] px-[1rem] font-medium text-[1rem] text-center max-w-max bg-[#3d3bff] text-white">
+					<button
+						onClick={setIsAddSubjectModalOpen.bind(null, true)}
+						className="select-none active:scale-95 transition rounded-xl py-[0.5rem] px-[1rem] font-medium text-[1rem] text-center max-w-max bg-[#3d3bff] text-white"
+					>
 						Fan qo'shish
 					</button>
 				</div>
@@ -161,39 +74,23 @@ function SubjectsPage() {
 						className="max-h-[60vh] overflow-auto custom-scroll"
 					>
 						<div className="w-full">
+							{isSubjectsLoading && <LoadingSpinner />}
 							{subjects.map((subject, index) => (
-								<div key={index} className="flex items-center justify-between">
-									<span className="w-1/3 py-2 text-start">{index + 1}</span>
-									<span className="w-1/3 py-2 text-center">{subject}</span>
-									<span className="w-1/3 py-2 text-end">
-										<span
-											onClick={toggleModal}
-											className="text-2xl hover:bg-[#f5f5f5] rounded-full px-1 active:scale-90 transition cursor-pointer material-icons"
-										>
-											more_vert
-										</span>
-									</span>
-								</div>
+								<SubjectDetail key={index} subject={subject} index={index} />
 							))}
 						</div>
 					</div>
 				</div>
 
-				{isModalOpen && (
-					<div
-						ref={modalRef}
-						className="absolute bg-white p-1 rounded shadow-lg border border-[#ddd]"
-						style={{ top: modalPosition.top, left: modalPosition.left }}
-					>
-						<div className="active:scale-95 rounded text-yellow-600 font-medium flex items-center gap-2 cursor-pointer hover:bg-[#f5f5f5] transition px-1">
-							<span className="text-lg material-icons">edit</span>
-							O'zgartirish
-						</div>
-						<div className="active:scale-95 rounded text-red-500 font-medium flex items-center gap-2 cursor-pointer hover:bg-[#f5f5f5] transition px-1">
-							<span className="text-lg material-icons">delete</span>
-							O'chirish
-						</div>
-					</div>
+				{isAddSubjectModalOpen && (
+					<NewSubjectModal
+						fetchSubjects={fetchSubjects}
+						ref={addSubjectModalRef}
+						handleClickOutsideWhileSubjectAdd={
+							handleClickOutsideWhileSubjectAdd
+						}
+						closeAddSubjectModal={setIsAddSubjectModalOpen.bind(null, false)}
+					/>
 				)}
 			</div>
 		</ContainerSmall>

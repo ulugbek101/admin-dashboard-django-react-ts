@@ -50,7 +50,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
 				/>
 				<label
 					htmlFor={id}
-					className="cursor-text absolute left-[1.125rem] top-1/2 -translate-y-1/2 text-[#666666] transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#666666] peer-focus:top-[1rem] peer-focus:text-xs peer-focus:-translate-y-1/2"
+					className="select-none cursor-text absolute left-[1.125rem] top-1/2 -translate-y-1/2 text-[#666666] transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[#666666] peer-focus:top-[1rem] peer-focus:text-xs peer-focus:-translate-y-1/2"
 					style={{
 						top: value ? "1rem" : undefined,
 						fontSize: value ? "0.75rem" : undefined,
